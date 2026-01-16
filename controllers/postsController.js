@@ -94,19 +94,21 @@ function modify(req, res) {
 function destroy(req, res) {
     const id = parseInt(req.params.id);
 
-    const index = posts.findIndex(p => p.id === id);
+    const sql = "DELETE FROM posts WHERE id = ?";
 
-    if (index === -1) {
-        return res.status(404).json({ error: "Post non trovato" });
-    }
+    connection.query(sql, [id], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({
+                error: "Errore del database"
+            });
+        }
 
-    posts.splice(index, 1);
-    console.log("Lista aggiornata dei post:");
-    console.log(posts);
 
-    res.status(204).send();
-
+        res.status(204).send();
+    });
 }
+
 
 
 
