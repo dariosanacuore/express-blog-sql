@@ -1,12 +1,24 @@
-import posts from "../routers/data.js"
+import connection from "../config/db.js";
+
 
 function index(req, res) {
-    const risposta = {
-        count: posts.length,
-        results: posts
-    }
-    res.json(risposta);
+    const sql = "SELECT * FROM posts";
+
+    connection.query(sql, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({
+                error: "Errore del database"
+            });
+        }
+
+        res.json({
+            count: results.length,
+            results: results
+        });
+    });
 }
+
 
 function show(req, res) {
     const id = parseInt(req.params.id);
